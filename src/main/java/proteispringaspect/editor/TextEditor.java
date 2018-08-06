@@ -1,4 +1,4 @@
-package proteispringaspect;
+package proteispringaspect.editor;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -24,7 +24,7 @@ public class TextEditor {
     }
 
     private void writeText(StringBuilder textBuilder) {
-        try (FileWriter writer = new FileWriter(new File(outPath))) {
+        try (FileWriter writer = new FileWriter(new File(outPath), true)) {
             writer.write(textBuilder.toString());
 
             writer.flush();
