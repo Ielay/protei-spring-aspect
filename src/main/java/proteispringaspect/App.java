@@ -1,5 +1,7 @@
 package proteispringaspect;
 
+import proteispringaspect.editor.TextEditor;
+
 /**
  * @author lelay
  */
