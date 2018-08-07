@@ -1,6 +1,9 @@
 package proteispringaspect.editor;
 
+import org.springframework.stereotype.Component;
+
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -9,21 +12,27 @@ import java.util.regex.Pattern;
 /**
  * @author lelay
  */
+@Component
 public class TextEditor {
 
     private final String outPath;
 
+    private final Scanner scanner;
+
     public TextEditor(String outPath) {
         this.outPath = outPath;
+
+        this.scanner = new Scanner(System.in);
+        this.scanner.useDelimiter(Pattern.compile("[\\r\\n]+"));
     }
 
-    private String readText(Scanner scanner) {
+    public String readText() {
         System.out.println("Enter a text to write it to the file: ");
 
         return scanner.next();
     }
 
-    private void writeText(StringBuilder textBuilder) {
+    public void writeText(StringBuilder textBuilder) {
         try (FileWriter writer = new FileWriter(new File(outPath), true)) {
             writer.write(textBuilder.toString());
 
@@ -33,29 +42,7 @@ public class TextEditor {
         }
     }
 
-    public void writeFromConsole() {
-
-        try (Scanner scanner = new Scanner(System.in)) {
-            scanner.useDelimiter(Pattern.compile("[\\r\\n]+"));
-
-            StringBuilder textBuilder = new StringBuilder("");
-
-            boolean wannaWrite = true;
-
-            while (wannaWrite) {
-                String newLine = this.readText(scanner);
-
-                textBuilder.append(newLine);
-                textBuilder.append(System.lineSeparator());
-
-                System.out.println("Do you want to write more? [y/n]");
-
-                if (scanner.next().toLowerCase().equals("n")) {
-                    wannaWrite = false;
-                }
-            }
-
-            this.writeText(textBuilder);
-        }
+    public void close() {
+        scanner.close();
     }
 }

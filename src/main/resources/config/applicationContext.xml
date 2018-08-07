@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <!--common classes beans-->
+    <bean id="textEditor" class="proteispringaspect.editor.TextEditor" scope="prototype">
+        <constructor-arg type="java.lang.String" value="src/main/resources/someText.txt"/>
+    </bean>
+
+    <!--aspects beans-->
+    <bean id="logger" class="proteispringaspect.aspect.InputLinesLoggerAspect" scope="singleton"/>
+
+    <aop:config>
+        <aop:aspect id="loggerAspect" ref="logger">
+            <aop:pointcut id="writeMethodTextEditor" expression="execution(* proteispringaspect.editor.TextEditor.readText())"/>
+
+            <aop:before pointcut-ref="writeMethodTextEditor" method="logLinesInfo"/>
+
+            <aop:after-returning method="countCharacters" pointcut-ref="writeMethodTextEditor"
+                                 returning="writtenText"/>
+
+            <aop:after-returning method="rememberLastWrittenLine" pointcut-ref="writeMethodTextEditor"
+                                 returning="writtenText"/>
+        </aop:aspect>
+    </aop:config>
+</beans>
