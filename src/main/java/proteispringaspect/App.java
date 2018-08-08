@@ -1,6 +1,7 @@
 package proteispringaspect;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import proteispringaspect.config.AppConfig;
 import proteispringaspect.editor.TextEditor;
 
 import java.util.Scanner;
@@ -10,10 +11,12 @@ import java.util.Scanner;
  */
 public class App {
     public static void main(String[] args) {
-        ClassPathXmlApplicationContext context =
-                new ClassPathXmlApplicationContext("classpath:config/applicationContext.xml");
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
 
-        TextEditor editor = context.getBean("textEditor", TextEditor.class);
+        ctx.register(AppConfig.class);
+        ctx.refresh();
+
+        TextEditor editor = ctx.getBean("textEditor", TextEditor.class);
 
         StringBuilder builder = new StringBuilder("");
 
@@ -35,6 +38,6 @@ public class App {
 
         editor.close();
 
-        context.close();
+        ctx.close();
     }
 }
